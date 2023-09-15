@@ -49,6 +49,7 @@ for a in graph:
         for c in b:
             if c == 0:
                 flag = 1
+                break
         ans = max(ans,max(b))
 
 if flag == 1:
