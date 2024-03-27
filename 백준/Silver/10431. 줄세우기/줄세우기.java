@@ -21,7 +21,7 @@ public class Main {
             for (int j = 0; j < 20; j++) {
                 line.add(Integer.parseInt(st.nextToken()));
             }
-            // 버블 정렬 O(n^2)
+         
             for (int k = 0; k < 20; k++) {
                 for (int l = 0; l < k; l++) {
                     if (line.get(k) < line.get(l)) {
