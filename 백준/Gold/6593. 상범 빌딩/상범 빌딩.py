@@ -1,45 +1,50 @@
 from collections import deque
-import sys
 
-dx = [1,-1,0,0,0,0]
-dy = [0,0,1,-1,0,0]
-dz = [0,0,0,0,1,-1]
-
-def bfs(c,a,b):
-  q = deque()
-  q.append((c,a,b))
-  visited[c][a][b] = 1
-  while q:
-    c, a, b = q.popleft()
-    for i in range(6):
-      nx = dx[i] + a
-      ny = dy[i] + b
-      nz = dz[i] + c
-      if 0<=nz<z and 0<=nx<x and 0<=ny<y:
-        if graph[nz][nx][ny] == 'E':
-          print('Escaped in',visited[c][a][b],'minute(s).')
-          return
-        if visited[nz][nx][ny] == 0 and graph[nz][nx][ny] == '.':
-          visited[nz][nx][ny] = visited[c][a][b] + 1
-          q.append((nz,nx,ny))
-  print("Trapped!")
+def bfs(start, end):
+    queue = deque()
+    queue.append((*start,0))
+    visited[start[0]][start[1]][start[2]] = 1
     
+    direction =  [(1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)]  # 6 방향
+    while queue:
+        z, x, y, time = queue.popleft()
+        if (z,x,y) == end:
+            return time
+        for dz, dx, dy in direction:
+            nz = z + dz
+            nx = x + dx
+            ny = y + dy
+            if 0<= nz < L and 0 <= nx < R and 0 <= ny < C:
+                if not visited[nz][nx][ny] and cube[nz][nx][ny] != '#':
+                    visited[nz][nx][ny] = 1
+                    queue.append((nz,nx,ny, time + 1))
+
+    return -1
+
+
 while True:
-  z, x, y = map(int, input().split())
+    L, R, C = map(int, input().split())
+    if (L, R, C) == (0,0,0):
+        break
+    cube = []
+    visited = [[[0]*C for _ in range(R)] for _ in range(L)]
+    start = None
+    end = None
 
-  if z == 0 and y == 0 and x == 0:
-    break
+    for i in range(L):
+        floor = []
+        for j in range(R):
+            row = input()
+            floor.append(row)
+            if 'S' in row:
+                start = (i,j,row.index('S'))
+            if 'E' in row:
+                end = (i,j,row.index('E'))
+        cube.append(floor)
+        input()
 
-  graph = [[[]*y for _ in range(x)] for _ in range(z)]
-  visited = [[[0]*y for _ in range(x)] for _ in range(z)]
-
-  for i in range(z):
-    graph[i] = [list(input()) for i in range(x)]
-    input()
-
-  for i in range(z):
-    for j in range(x):
-      for k in range(y):
-        if graph[i][j][k] == 'S':
-          bfs(i,j,k)
-
+    result = bfs(start,end)
+    if result == -1:
+        print("Trapped!")
+    else:
+        print(f'Escaped in {result} minute(s).')
