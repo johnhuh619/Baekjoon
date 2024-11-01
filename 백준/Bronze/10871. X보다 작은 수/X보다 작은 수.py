@@ -1,9 +1,5 @@
 n,m = map(int,input().split())
 numbers = list(map(int,input().split()))
-res = ''
-for num in numbers:
-    if num < m:
-        res+=str(num)
-        res+=' '
+res = ' '.join(str(num) for num in numbers if num < m)
+print(res)
     
-print(res[:-1])
