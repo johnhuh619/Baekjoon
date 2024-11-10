@@ -15,17 +15,12 @@ def bfs(start):
         for dx,dy in dir:
             nx = x + dx
             ny = y + dy
-            if 0<=nx<n and 0<=ny<m:
+            if 0<=nx<n and 0<=ny<m and graph[nx][ny] != 'X':
                 if visited[nx][ny] == 0:
-                    if graph[nx][ny] == 'O':
-                        visited[nx][ny] = 1
-                        q.append((nx,ny))
                     if graph[nx][ny] == 'P':
-                        visited[nx][ny] = 1
-                        q.append((nx,ny))
                         ans+=1
-                    if graph[nx][ny] == 'X':
-                        continue
+                    visited[nx][ny] = 1
+                    q.append((nx,ny))
     return ans
 for i in range(n):
     for j in range(m):
