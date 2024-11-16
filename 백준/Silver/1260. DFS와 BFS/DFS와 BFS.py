@@ -1,35 +1,36 @@
-N,M,V = map(int,input().split())
+from collections import deque
+n,m,v = map(int,input().split())
+graph = [[] for _ in range(n+1)]
+for _ in range(m):
+    i, j = map(int,input().split())
+    graph[i].append(j)
+    graph[j].append(i)
+for i in range(1,n+1):
+    graph[i].sort()
 
-#행렬 만들기
-graph = [[0]*(N+1) for _ in range(N+1)]
-for i in range (M):
-    a,b = map(int,input().split())
-    graph[a][b] = graph[b][a] = 1
+def bfs(start):
+    visited = [0]*(n+1)
+    q = deque([start])
+    visited[start] = 1
+    while q:
+        node = q.popleft()
+        print(node, end=' ')
+        for n_node in graph[node]:
+            if not visited[n_node]:
+                visited[n_node] = 1
+                q.append(n_node)
 
-#방문 리스트 행렬
-visited1 = [0]*(N+1)
-visited2 = visited1.copy()
+visited = [0]*(n+1)
+def dfs(c_node,visited):
+    visited[c_node] = 1
+    print(c_node,end=' ')
+    for n_node in graph[c_node]:
+        if not visited[n_node]:
+            dfs(n_node,visited)
 
-#dfs 함수 만들기
-def dfs(V):
-    visited1[V] = 1 #방문처리
-    print(V, end=' ')
-    for i in range(1, N+1):
-        if graph[V][i] == 1 and visited1[i] == 0:
-            dfs(i)
-
-#bfs 함수 만들기
-def bfs(V):
-    queue = [V]
-    visited2[V] = 1 #방문처리
-    while queue:
-        V = queue.pop(0) #방문 노드 제거
-        print(V, end = ' ')
-        for i in range(1, N+1):
-            if(visited2[i] == 0 and graph[V][i] == 1):
-                queue.append(i)
-                visited2[i] = 1 # 방문처리
-
-dfs(V)
+dfs(v,visited)
 print()
-bfs(V)
+bfs(v)
+
+
+    
