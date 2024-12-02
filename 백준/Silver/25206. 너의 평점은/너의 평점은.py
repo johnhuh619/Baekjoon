@@ -1,26 +1,22 @@
-tot_grade = 0
-tot_point = 0
+grade_dict = {
+    "A+": 4.5,
+    "A0": 4.0,
+    "B+": 3.5,
+    "B0": 3.0,
+    "C+": 2.5,
+    "C0": 2.0,
+    "D+": 1.5,
+    "D0": 1.0,
+    "F": 0.0,
+}
+tot_grade = 0.0
+tot_point = 0.0
 for _ in range(20):
-    name, p, grade = map(str, input().split())
-    tmp = 0
-    if grade != 'P':         
-        tot_grade += float(p)
-    if grade == 'A+':
-        tmp = 4.5
-    elif grade == 'A0':
-        tmp = 4.0
-    elif grade == 'B+':        
-        tmp = 3.5
-    elif grade == 'B0':
-        tmp = 3.0
-    elif grade == 'C+':
-        tmp = 2.5
-    elif grade == 'C0':
-        tmp = 2.0
-    elif grade == 'D+':
-        tmp = 1.5
-    elif grade == 'D0':
-        tmp = 1.0
-    tot_point += float(p)*tmp
-ans = float(tot_point/tot_grade)
+    name, p, grade = input().split()
+    p = float(p)
+    if grade == "P":         
+        continue
+    tot_grade += p*grade_dict[grade] 
+    tot_point += p 
+ans = tot_grade/tot_point
 print("{:5f}".format(ans))
