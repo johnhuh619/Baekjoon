@@ -1,17 +1,15 @@
-n,m = map(int,input().split())
-num_dic = {}
-p_dic = {}
-for i in range(n):
-    p_dic[i+1] = input()
-    num_dic[p_dic[i+1]] = (i+1)
-
-for i in range(m):
-    target = input()
-    if target.isalpha():
-        print(num_dic[target])
+import sys
+input = sys.stdin.readline
+N, M = map(int, input().split())
+dic = {}
+dic_int = {}
+for i in range(1,N+1):
+    t = input().strip()
+    dic[t] = i
+    dic_int[i] = t
+for _ in range(M):
+    t = input().strip()
+    if t.isalpha():
+        print(dic[t])
     else:
-        print(p_dic[int(target)])
-    
-
-
-
+        print(dic_int[int(t)])
