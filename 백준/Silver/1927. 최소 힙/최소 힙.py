@@ -1,13 +1,13 @@
 import heapq
 import sys
 n = int(input())
-h = []
+hq = []
 for _ in range(n):
-    key = int(sys.stdin.readline().rstrip())
-    if key == 0:
-        try:
-            print(heapq.heappop(h))
-        except:
-            print(0)
+  key = int(sys.stdin.readline().rstrip())
+  if key == 0:
+    if not hq:
+      print(0)
     else:
-        heapq.heappush(h,key)   
+      print(heapq.heappop(hq))
+  else:
+    heapq.heappush(hq, key)
