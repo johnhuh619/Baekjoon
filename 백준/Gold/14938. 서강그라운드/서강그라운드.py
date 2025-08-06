@@ -1,38 +1,40 @@
 import heapq
+import sys
 
-n, m, r = map(int, input().split())
+n, m, r = map(int,input().split())
 val = list(map(int, input().split()))
-graph = [[] for _ in range(n)]
+graph = [[] for _ in range(n+1)]
 for _ in range(r):
-  s, e, v = map(int, input().split())
-  graph[s-1].append((e-1,v))
-  graph[e-1].append((s-1,v))
+  v1, v2, w = map(int, input().split())
+  graph[v1].append((v2,w))
+  graph[v2].append((v1,w))
+
+INF = sys.maxsize
+
+def djikstra(start):
+  dist = [INF]*(n+1)
+  dist[start] = 0
+  hq = [(0,start)]
+
+  while hq:
+    tot_dist, cv = heapq.heappop(hq)
+    if tot_dist > dist[cv]:
+      continue
+
+    for nv, n_dist in graph[cv]:
+      new_dist = tot_dist + n_dist
+      if new_dist < dist[nv]:
+        dist[nv] = new_dist
+        heapq.heappush(hq, (new_dist, nv))
+  return dist
 
 ans = 0
 
-def dijikstra(start, graph, n):
-  INF = float('inf')
-
-  dist = [INF] * n
-  dist[start] = 0
-
-  q = [(0,start)]
-
-  while q:
-    cur_dist, cur_node = heapq.heappop(q)
-    if cur_dist > dist[cur_node]:
-      continue
-
-    for n_node, w in graph[cur_node]:
-      new_dist = cur_dist + w
-      if new_dist < dist[n_node]:
-        dist[n_node] = new_dist
-        heapq.heappush(q, (new_dist, n_node))
-  return dist
-
-for i in range(n):
-  dist = dijikstra(i, graph, n)
-  tot = sum(val[j] for j in range(n) if dist[j] <= m)
+for i in range(1,n+1):
+  dist = djikstra(i)
+  tot = 0
+  for j in range(1, n+1):
+    if dist[j] <= m:
+      tot += val[j-1]
   ans = max(ans, tot)
-
 print(ans)
