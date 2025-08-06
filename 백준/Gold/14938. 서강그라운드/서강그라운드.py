@@ -32,9 +32,6 @@ ans = 0
 
 for i in range(1,n+1):
   dist = djikstra(i)
-  tot = 0
-  for j in range(1, n+1):
-    if dist[j] <= m:
-      tot += val[j-1]
+  tot = sum(val[j-1] for j in range(1, n+1) if dist[j] < m+1)
   ans = max(ans, tot)
 print(ans)
