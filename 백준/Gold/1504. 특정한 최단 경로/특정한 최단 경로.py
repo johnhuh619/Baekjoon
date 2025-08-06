@@ -1,38 +1,47 @@
-import sys
 import heapq
-a, b = map(int, input().split())
-graph = [[] for _ in range(a+1)]
+import sys
 
-for _ in range(b):
-    s, e, v = map(int, input().split())
-    graph[s].append((e, v))
-    graph[e].append((s, v))
+n, e = map(int, input().split())
+graph = [ [] for _ in range(n+1)]
 
+for _ in range(e):
+  v1, v2, w = map(int, input().split())
+  graph[v1].append((v2, w))
+  graph[v2].append((v1, w))
 
 v1, v2 = map(int, input().split())
 
-def dijkstra(start, end):
-    route = [sys.maxsize]*(a+1)
-    route[start] = 0
-    q = [(0, start)]
-    while q:
-        tot_w, now = heapq.heappop(q)
+# 1 -> v1 -> v2 -> end
+# 1 -> v2 -> v1 -> end
 
-        if route[now] < tot_w:
-            continue
+INF = sys.maxsize
 
-        for n_node, weight in graph[now]:
-            cost = tot_w + weight
-            if cost < route[n_node]:
-                route[n_node] = cost
-                heapq.heappush(q, (cost, n_node))
-    return route[end]
+def djikstra(start):
+  pq = [(0, start)]
+  route = [INF] * (n+1)
+  route[start] = 0
 
+  while pq:
+    tot_w, cur_v = heapq.heappop(pq)
+    if tot_w > route[cur_v]:
+      continue
 
-r1 = dijkstra(1, v1) + dijkstra(v1, v2) + dijkstra(v2, a)
-r2 = dijkstra(1, v2) + dijkstra(v2, v1) + dijkstra(v1, a)
+    for nv, nw in graph[cur_v]:
+      new_dist = tot_w + nw
+      if new_dist < route[nv]:
+        route[nv] = new_dist
+        heapq.heappush(pq, (new_dist, nv))
 
-if r1 >= sys.maxsize and r2 >= sys.maxsize:
-    print(-1)
+  return route
+
+dist_from_1 = djikstra(1)
+dist_from_v1 = djikstra(v1)
+dist_from_v2 = djikstra(v2)
+
+r1 = dist_from_1[v1] + dist_from_v1[v2] + dist_from_v2[n]
+r2 = dist_from_1[v2] + dist_from_v2[v1] + dist_from_v1[n]
+
+if r1 >= INF and r2 >= INF:
+  print(-1)
 else:
-    print(min(r1,r2))
+  print(min(r1, r2))
