@@ -4,19 +4,16 @@ sys.setrecursionlimit(10 ** 6)
 
 tree = list(map(int, sys.stdin.read().split()))
 
-
 def sol(start, end):
     if start >= end:
-        return
+        return 
+    
     root = tree[start]
-    split = start+1
-    # 좌측 / 우측 서브 트리 분리
-    while split < end and tree[split] < root:
-        split += 1
-    sol(start+1, split)
-    sol(split, end)
+    nxt_root_idx = start+1
+    while nxt_root_idx < end and tree[nxt_root_idx] < root:
+        nxt_root_idx+=1
+    sol(start+1, nxt_root_idx)
+    sol(nxt_root_idx, end)
     print(root)
 
 sol(0,len(tree))
-
-    
