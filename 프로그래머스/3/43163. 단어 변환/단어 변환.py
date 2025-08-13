@@ -1,27 +1,25 @@
 from collections import deque
 
 def solution(begin, target, words):
-    if target not in words:
-        return 0
-
-    return bfs(begin,target,words)
-
-
-def bfs(begin,target,words):
     
-    queue = deque()
-    queue.append([begin, 0])
-
-    while queue:
-        now, step = queue.popleft()
-        if now == target:
-            return step
+    def diff(x, y):
+        diff = 0
+        for i in range(len(y)):
+            if x[i] != y[i]:
+                diff += 1
+        return diff
+    
+    
+    q = deque([(begin,0)])
+    visited = [False]*len(words)
+    while q:
+        word, dist = q.popleft()
+        if word == target:
+            return dist
         
-        for word in words:
-            count = 0
-            for i in range(len(now)):
-                if now[i] != word[i]:
-                    count += 1
-            if count == 1:
-                queue.append([word, step+1])
-                    
+        for i in range(len(words)):
+            if diff(word, words[i]) == 1 and not visited[i]:
+                visited[i] = True
+                dist += 1
+                q.append((words[i], dist))
+    return 0
