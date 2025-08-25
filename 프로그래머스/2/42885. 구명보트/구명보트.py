@@ -1,13 +1,12 @@
 def solution(people, limit):
-    two_p_boat = 0
-    # limit 맞추기
-    l_p = len(people)
-    f = 0
-    r = l_p - 1
+    
     people.sort()
-    while f < r:
-        if people[f] + people[r] <= limit:
-            f += 1
-            two_p_boat += 1
-        r -= 1 
-    return l_p - two_p_boat
+    cnt = 0    
+    i, j = 0, len(people) - 1
+    while i <= j:
+        if people[i] + people[j] <= limit:
+            i += 1
+        j -= 1
+        cnt += 1    
+    
+    return cnt
