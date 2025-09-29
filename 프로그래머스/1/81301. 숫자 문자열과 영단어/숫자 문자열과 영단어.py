@@ -12,13 +12,15 @@ def solution(s):
         'eight': 8,
         'nine': 9
     }
-    st =''
+    
+    
+    res, st = [], ''
     for ch in s:
         if ch.isdigit():
-            res += ch
+            res.append(ch)
         else:
             st += ch
             if st in dic:
-                res += str(dic[st])
+                res.append(str(dic[st]))
                 st = ''
-    return int(res)
+    return int(''.join(res))
