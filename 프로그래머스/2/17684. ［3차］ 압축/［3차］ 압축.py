@@ -1,21 +1,16 @@
 def solution(msg):
-    answer = []
-    dic = {}
-    for i in range(26):
-        dic[chr(ord('A') + i)] = i + 1
-    
-    temp = ''
-    cnt = 26
-
-    for ch in msg:
-        temp += ch
-        if temp not in dic:
-            cnt += 1
-            dic[temp] = cnt
-            answer.append(dic[temp[:-1]])
-            temp = ch
-            
-    if temp in dic:
-        answer.append(dic[temp])
+    dic = { chr(ord('A') + i): i+1 for i in range(26)}
+    ans = []
+    idx = 26
+    i = 0
+    while i < len(msg):
+        nxt = i + 1
+        while nxt <= len(msg) and msg[i:nxt] in dic:
+            nxt += 1
+        ans.append(dic[msg[i:nxt - 1]])
+        if nxt <= len(msg):
+            idx += 1
+            dic[msg[i:nxt]] = idx
+        i = nxt - 1
         
-    return answer
+    return ans
