@@ -13,4 +13,4 @@ def solution(files):
     ans = [spliter(f) for f in files]
     ans.sort(key = lambda x: (x[0].lower(), int(x[1])))
     
-    return [''.join(map(str, x)) for x in ans]
+    return [''.join(x) for x in ans]
