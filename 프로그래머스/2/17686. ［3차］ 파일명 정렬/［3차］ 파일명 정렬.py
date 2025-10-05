@@ -1,10 +1,10 @@
 def spliter(file):
-    for i in range(len(file)):
-        if file[i].isdecimal():
-            head = file[:i]
+    for i, ch in enumerate(file):
+        if ch.isdecimal():
             j = i
-            while j < len(file) and file[j].isdecimal() == True:
+            while j < len(file) and file[j].isdecimal():
                 j+=1
+            head = file[:i]
             num = file[i:j]
             tail = file[j:]
             return (head, num, tail)
