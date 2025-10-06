@@ -1,4 +1,3 @@
-import copy
 def rotate90(matrix):
     M = len(matrix)
     rotated = [[0] * M for _ in range(M)]
