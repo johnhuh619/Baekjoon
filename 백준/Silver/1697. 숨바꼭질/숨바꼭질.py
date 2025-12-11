@@ -1,23 +1,25 @@
 from collections import deque
+n, k = map(int,input().split())
 
-N, K = map(int, input().split())
-visited = [0] * (10**5 + 1)
+# cur = x
+# 1) x+1
+# 2) x-1
+# 3) x*2
+MAX = 2000000
+visited = [False]*MAX
+
+def bfs():
+    q = deque([(n,0)])
+    
+    while q:
+        cx, cnt = q.popleft()
+        if cx == k:
+            return cnt
+        
+        for nx in [cx + 1, cx -1, cx*2]:
+            if MAX > nx >= 0 and visited[nx] == False:
+                visited[nx] = True
+                q.append((nx, cnt+1))
 
 
-
-def solution():
-
-    queue = deque()
-    queue.append(N)
-    while queue:
-        x = queue.popleft()
-        if x == K:
-            print(visited[x])
-            break
-
-        for j in (x-1, x+1, x*2):
-            if 0 <= j < 10**5 + 1 and not visited[j]:
-                visited[j] = visited[x] + 1
-                queue.append(j)
-
-solution()
+print(bfs())
