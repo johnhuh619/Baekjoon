@@ -1,18 +1,41 @@
 import sys
-n = int(input())
-matrix = []
-for _ in range(n):
-    matrix.append(list(map(int,sys.stdin.readline().split())))
-res = [[0]*n for _ in range(n)]
 
-def dfs(start,cur):
-    for n_node in range(n):
-        if matrix[cur][n_node] == 1 and res[start][n_node] == 0:
-            res[start][n_node] = 1
-            dfs(start,n_node)
+n = int(input())
+graph = [[] for _ in range(n)]
 
 for i in range(n):
-    dfs(i,i)
+    l = list(map(int, input().split()))
+    for j in range(n):
+        if l[j] == 1:
+            graph[i].append(j)
+res = [[0]*n for _ in range(n)]
+
+def dfs(start):
+    visited = [0] * n
+    stack = [start]
+    
+    while stack:
+        cur = stack.pop()
+        for nxt in graph[cur]:
+            if not visited[nxt]:
+                visited[nxt] = 1
+                stack.append(nxt)
+
+    return visited
+
+for i in range(n):
+    visited = dfs(i)
+    for j in range(n):
+        res[i][j] = visited[j]
 
 for row in res:
     print(*row)
+
+            
+
+                
+            
+    
+    
+
+        
