@@ -1,31 +1,38 @@
-import sys
 from collections import deque
+def to_deque(s):
+    if s == "[]":
+        return deque()
+    return deque(int(x) for x in s.strip('[]').split(',') if x)
 
-num = int(input())
-for _ in range(num):
-    cmd = sys.stdin.readline().rstrip()
-    n = int(input())
-    arr = deque(sys.stdin.readline().rstrip()[1:-1].split(","))
-    if n == 0:
-        arr = deque()
+def from_list(arr):
+    return ("[" + ','.join(map(str,arr)) + "]")
 
-    err = False
-    cnt = 0
-    for i in cmd:
-        if i == "R":
-            cnt+=1
-        else:
-            if not arr:
-                err = True
-                print("error")
-                break
-            elif cnt % 2 == 0:
-                arr.popleft()
+def cmd_exec(cmd, q):
+    rev = False
+    for c in cmd:
+        if c == "R":
+            rev = not rev
+        elif c == "D":
+            if not q:
+                return "error"    
+            if rev:
+                q.pop()
             else:
-                arr.pop()
-    if not err:
-        if cnt % 2 == 0:
-            print("["+",".join(arr)+"]")
-        else:
-            arr.reverse()
-            print("["+",".join(arr)+"]")
+                q.popleft()
+    if rev:
+        q.reverse()                
+    return from_list(q)
+
+def test():
+    cmd = input()
+    length = int(input())
+    s = input().strip()
+    q = to_deque(s)
+    print(cmd_exec(cmd, q))
+    
+
+n = int(input())
+for _ in range(n):
+    test()
+
+
