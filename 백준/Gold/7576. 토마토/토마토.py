@@ -1,45 +1,36 @@
 from collections import deque
-import sys
+m, n = map(int, input().split())
+box = [list(map(int, input().split())) for _ in range(n)]
 
-
-n, m = map(int,sys.stdin.readline().split())
-graph = [list(map(int,sys.stdin.readline().split())) for _ in range(m)]
-visited= [[False]*(n) for _ in range(m)]
-q = deque()
 def bfs():
-  dx = [1,-1,0,0]
-  dy = [0,0,1,-1]
-
-  while q:
-    x, y = q.popleft()
-
-    for i in range(4) :
-      nx, ny = dx[i]+x, dy[i]+y
-      if 0<=nx<m and 0<=ny<n and graph[nx][ny] == 0 and visited[nx][ny] == False:
-        graph[nx][ny] = graph[x][y] + 1
-        visited[nx][ny] = True
-        q.append((nx,ny))
-
-# 탐색 시작할 첫 1 찾기
-for x in range(m):
-  for y in range(n):
-    if graph[x][y] == 1:
-      q.append((x,y))
-      visited[x][y] = True
+    dir = [
+        (1,0),
+        (0,1),
+        (-1,0),
+        (0,-1)
+    ]
+    q = deque()
+    for i in range(n):
+        for j in range(m):
+            if box[i][j] == 1:
+                q.append((i,j))
     
+    while q:
+        x, y = q.popleft()    
+        for dx, dy in dir:
+            nx = x + dx
+            ny = y + dy
+            if 0 <= nx < n and 0 <= ny < m and box[nx][ny] == 0:
+                box[nx][ny] = box[x][y] + 1
+                q.append((nx, ny))
 bfs()
 ans = 0
-flag = 0
-
-for a in graph:
-    for b in a:
-        if b == 0:
-            flag = 1
-            break
-    if flag == 1:
-       break
-    ans = max(ans, max(a))
-if flag == 1:
-   print(-1)
+for row in box:
+    if 0 in row:
+        print(-1)
+        exit()
+    ans = max(ans, max(row))
+if ans == 1:
+    print(0)
 else:
-   print(ans -1)
+    print(ans-1)
