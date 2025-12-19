@@ -1,35 +1,53 @@
-import sys
 import heapq
+import sys
 
-t = int(sys.stdin.readline())
+t = int(input())    # 입력 데이터 개수
+
+
 for _ in range(t):
-    min_q = []
-    max_q = []
-    k = int(sys.stdin.readline())
-    alive = [False]*k
-    for i in range(k):
-        s, n = sys.stdin.readline().split()
-        if s == "I":
-            #이중 heapq 여기 들어감
-            heapq.heappush(min_q, (int(n), i))  
-            heapq.heappush(max_q,(int(n)*-1,i))
-            alive[i] = True
-        else:
-            if int(n) == -1:
-                if min_q:
-                    alive[heapq.heappop(min_q)[1]] = False
-            else:
-                if max_q:
-                    alive[heapq.heappop(max_q)[1]] = False
-        while min_q and alive[min_q[0][1]] == False:
-            heapq.heappop(min_q)
-        while max_q and alive[max_q[0][1]] == False:
-            heapq.heappop(max_q)
-            
-    if len(min_q) == 0:
-        print("EMPTY")
-    else:
-        print(-max_q[0][0], min_q[0][0])
     
-                    
+    k = int(input())    # 연산 개수
+    
+    min_pq = []
+    max_pq = []
+    
+    visited = [False] * k
+    nid = 0
+    
+    for i in range(k):
+        cmd, num = sys.stdin.readline().split()
+        num = int(num)
+        if cmd == "I":
+            heapq.heappush(min_pq, (num, nid))
+            heapq.heappush(max_pq, (-num, nid))
+            visited[nid] = True 
+            nid += 1
+        # D -1 => min 삭제
+        # D 1 => max 삭제
+        elif cmd == "D":
+            if num == -1:
+                # 삭제 표시 -> 진짜 삭제
+                while min_pq and not visited[min_pq[0][1]]:
+                    heapq.heappop(min_pq)
+                if min_pq:
+                    _, i = heapq.heappop(min_pq)
+                    visited[i] = False # 삭제 표시
+                
+            else:
+                # 삭제 표시 -> 진짜 삭제
+                while max_pq and not visited[max_pq[0][1]]:
+                    heapq.heappop(max_pq)
+                if max_pq:
+                    _, i = heapq.heappop(max_pq)
+                    visited[i] = False # 삭제 표시
+         
+    # 데이터 정리.           
+    while min_pq and not visited[min_pq[0][1]]:
+        heapq.heappop(min_pq)
+    while max_pq and not visited[max_pq[0][1]]:
+        heapq.heappop(max_pq)
 
+    if not min_pq:
+        print("EMPTY")                
+    else:
+        print(-max_pq[0][0], min_pq[0][0])
