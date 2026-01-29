@@ -5,7 +5,7 @@ def main():
     b = len(bomb)
     for ch in s:
         stack.append(ch)
-        if len(stack) >= b:
+        if len(stack) >= b and ch == bomb[-1]:
             if ''.join(stack[-b:]) == bomb:
                 for _ in range(b):
                     stack.pop()
