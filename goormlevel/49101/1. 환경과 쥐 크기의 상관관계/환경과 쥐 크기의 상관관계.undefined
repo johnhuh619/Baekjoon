@@ -1,0 +1,28 @@
+# -*- coding: utf-8 -*-
+# UTF-8 encoding when using korean
+import sys
+input = sys.stdin.readline
+
+N = int(input())
+A = list(map(int, input().split()))
+B = list(map(int, input().split()))
+
+def func(arr):
+	arr.sort()
+	l = 0
+	best_cnt = 0
+	best_x = 0
+	for r in range(N):
+		while arr[r] - arr[l] > 4:
+			l += 1
+		cnt = r-l + 1
+		x = arr[r] - 2
+		if cnt > best_cnt or (cnt == best_cnt and x < best_x):
+			best_cnt = cnt
+			best_x = x
+	return best_x
+
+a = func(A)
+b = func(B)
+print(a, b)
+print("good" if a > b else "bad")
