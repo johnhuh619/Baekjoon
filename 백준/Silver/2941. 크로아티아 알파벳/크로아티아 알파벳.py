@@ -1,10 +1,8 @@
 arr = ['c=', 'c-', 'dz=', 'd-', 'lj', 'nj', 's=', 'z=' ]
-a = input()
-answer = 0
+word = input()
 
-for e in arr:
-    while a.find(e)> -1:
-        a = a.replace(e, ' ')
-answer += len(a)    
-
-print(answer)
+for w in arr:
+    while word.find(w) > -1:
+        word = word.replace(w, ' ')
+ans = len(word)
+print(ans)
