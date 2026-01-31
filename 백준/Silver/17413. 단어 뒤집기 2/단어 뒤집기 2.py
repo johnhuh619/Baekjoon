@@ -1,5 +1,7 @@
 import sys
+
 input = sys.stdin.readline
+
 s = input().rstrip()
 
 ans = []
@@ -10,19 +12,23 @@ for ch in s:
         while stack:
             ans.append(stack.pop())
         in_tag = True
-        ans.append(ch) 
+        ans.append(ch)
+    
     elif ch == '>':
         in_tag = False
         ans.append(ch)
+        
     elif in_tag:
-        ans.append(ch)    
+        ans.append(ch)
+    
     else:
         if ch == ' ':
             while stack:
                 ans.append(stack.pop())
-            ans.append(' ')
+            ans.append(ch)
         else:
             stack.append(ch)
+
 while stack:
     ans.append(stack.pop())
     
