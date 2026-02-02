@@ -1,32 +1,37 @@
-# 스위치 on 1 off 0
+n = int(input())
+switch = list(map(int,input().split()))
+m = int(input())
+
+def toggle(i):
+    switch[i] = 1 - switch[i]
+    
+def man(num):
+    i = num -1
+    while i < n:
+        toggle(i)
+        i += num
+        
+
+def woman(num):
+    i = num -1
+    toggle(i)
+    l, r = i-1, i+1
+    while l >= 0 and r < n and switch[l] == switch[r]:
+        toggle(l)
+        toggle(r)
+        l -= 1
+        r += 1
 
 
-def change(num):
-    if switch[num] == 0:
-        switch[num] = 1
+for _ in range(m):    
+    gen, num = map(int, input().split())
+    if gen == 1:
+        man(num)
     else:
-        switch[num] = 0
-    return
+        woman(num)
 
-
-N = int(input())
-switch = [-1] + list(map(int, input().split()))
-students = int(input())
-for _ in range(students):
-    sex, num = map(int, input().split())
-    if sex == 1:
-        for i in range(num, N+1, num):
-            change(i)
-    else:
-        change(num)
-        for k in range(N//2):
-            if num + k > N or num - k < 1: break
-            if switch[num + k] == switch[num - k]:
-                change(num + k)
-                change(num - k)
-            else:
-                break
-for i in range(1, N+1):
-    print(switch[i], end = " ")
-    if i % 20 == 0:
+    
+for i in range(n):
+    print(switch[i], end = ' ')
+    if (i+1) % 20 == 0:
         print()
