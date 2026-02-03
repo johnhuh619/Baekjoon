@@ -1,72 +1,54 @@
 import sys
+input = sys.stdin.readline
+n, m = map(int, input().split())
+board = [list(map(int,input().split())) for _ in range(n)]
 
-def print2D(arr):
-    for i in arr:
-        print(i)
+arr = []
+for i in range(n):
+    for j in range(m):
+        if 1 <= board[i][j] <= 5:
+            arr.append((i,j,board[i][j]))
 
-DIRS = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-CCTV_DIR = [
-    [-1],
-    [1], # 1
-    [1, 3], # 2
-    [0, 1], # 3
-    [0, 1, 3], # 4
-    [0, 1, 2, 3] # 5
+ 
+# 0: up 1: down 2: left 3: right
+dirs = [
+    [],
+    [[0],[1],[2],[3]],
+    [[0,1], [2,3]],
+    [[0,2], [2,1], [1,3], [3,0]],
+    [[0,1,2], [0,1,3], [0,2,3], [1,2,3]],
+    [[0,1,2,3]]
 ]
 
-N, M = map(int, sys.stdin.readline().split())
-board = []
-cctv = []
-zero_cnt = 0
+dx = [-1,1,0,0]
+dy = [0,0,-1,1]
 
-for row in range(N):
-    line = list(map(int, sys.stdin.readline().split()))
-    board.append(line)
-    for col, data in enumerate(line):
-        if 1 <= data <= 5:
-            cctv.append((row, col, data))
-        if data == 0:
-            zero_cnt += 1
-
-stk = []
-result = 0
-
-def dfs(depth):
-    global result
-    if depth == len(cctv):
-        visit = [[False] * M for _ in range(N)]
-        cnt = 0
-        for idx, cctv_dirs in enumerate(stk):
-            start_row, start_col, _ = cctv[idx]
-            for dir in cctv_dirs:
-                dx, dy = DIRS[dir]
-                cur_row, cur_col = start_row, start_col
-                while 0 <= cur_row < N and 0 <= cur_col < M and board[cur_row][cur_col] != 6:
-                    if not visit[cur_row][cur_col] and board[cur_row][cur_col] == 0:
-                        cnt += 1
-                        visit[cur_row][cur_col] = True
-                    cur_row += dx
-                    cur_col += dy
-        result = max(cnt, result)
+def search(arr, x, y, d):
+    nx, ny = x, y
+    while True:
+        nx += dx[d]
+        ny += dy[d]
+        if nx < 0 or ny < 0 or nx >= n or ny >= m:
+            break
+        if arr[nx][ny] == 6:
+            break
+        if arr[nx][ny] == 0:
+            arr[nx][ny] = -1
+        
+ans = float('inf')
+def dfs(idx, board):
+    global ans
+    if idx == len(arr):
+        nans = sum(row.count(0) for row in board)
+        ans = min(ans, nans)
         return
-    row, col, ctype = cctv[depth]
-    record_dirs = CCTV_DIR[ctype]
-    if ctype == 5:
-        stk.append(record_dirs)
-        dfs(depth + 1)
-        stk.pop()
-    elif ctype == 2:
-        for i in range(2):
-            temp = [(record_dir + i) % 4 for record_dir in record_dirs]
-            stk.append(temp)
-            dfs(depth + 1)
-            stk.pop()
-    else:
-        for i in range(4):
-            temp = [(record_dir + i) % 4 for record_dir in record_dirs]
-            stk.append(temp)
-            dfs(depth + 1)
-            stk.pop()
-
-dfs(0)
-print(zero_cnt - result)
+    
+    x, y, v = arr[idx]
+    for dir in dirs[v]:
+        n_board = [row[:] for row in board]
+        for d in dir:
+            search(n_board, x, y, d)
+        dfs(idx + 1, n_board)
+            
+dfs(0,board)
+print(ans)
