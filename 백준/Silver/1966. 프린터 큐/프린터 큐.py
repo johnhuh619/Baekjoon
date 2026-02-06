@@ -1,20 +1,27 @@
-k = int(input())
+from collections import deque
+t = int(input())
 
+def find(l, k, d):
+    m = max(l)
+    cnt = 0
+    while l:
+        top = l.popleft() 
+        cur_max = max(d[i] for i in l) if l else -1
+        if d[top] >= cur_max:
+            cnt += 1
+            if top == k:
+                return cnt
+        else:
+            l.append(top)
+    
 
-for _ in range(k):
+for _ in range(t):
+
     n, m = map(int, input().split())
-    data = list(map(int, input().split()))
-    result = 1
-    while data:
-        if data[0] < max(data):
-            data.append(data.pop(0))
-        else:
-            if m == 0:
-                break
-            data.pop(0)
-            result+=1
-        if m > 0:
-            m = m-1
-        else:
-            m = len(data) - 1
-    print(result)
+    q = deque(map(int, input().split()))
+    l = deque(range(n))
+    
+    d = {i: q[i] for i in range(n)}        
+        
+    print(find(l,m,d))
+
