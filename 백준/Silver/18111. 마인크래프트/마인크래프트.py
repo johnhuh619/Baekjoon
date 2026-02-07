@@ -1,23 +1,31 @@
-import sys
-n, m, b =  map(int,input().split())
-graph = []
-idx = 0
-ans = float('inf')
-for _ in range(n):
-    graph.append(list(map(int,sys.stdin.readline().split())))
-    
+n, m, b = map(int, input().split())
+board = [list(map(int, input().split())) for _ in range(n)]
 
-for floor in range(257):
-    min_b, max_b = 0, 0
+ans = float('inf')
+
+# add / remove
+floor = 0
+for cur in range(257):
+    add, rem = 0, 0
+    
     for i in range(n):
         for j in range(m):
-            if graph[i][j] >= floor:
-                max_b += graph[i][j] - floor
+            # 2초
+            if board[i][j] >= cur:
+                rem += board[i][j] - cur
+            # 1초
             else:
-                min_b += floor - graph[i][j]
-    if (max_b+b) >= min_b:
-        if max_b*2 + min_b <= ans:
-            ans = max_b*2 + min_b
-            idx = floor
+                add += cur - board[i][j]
     
-print(ans, idx)
+    if add > rem + b:
+        continue
+    
+    t = rem*2 + add 
+    if t < ans or (t == ans and cur > floor):
+        ans = t
+        floor = cur
+
+print(ans, floor)
+        
+
+                
