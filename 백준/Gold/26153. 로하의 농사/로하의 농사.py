@@ -32,15 +32,6 @@ def dfs(x, y, prev_dir, cnt, cur_sum):
             visited[nx][ny] = True
             dfs(nx, ny, i, cnt + point, cur_sum + w[nx][ny])
             visited[nx][ny] = False
-
-for d in range(4):
-    nx = sx + dx[d]
-    ny = sy + dy[d]
-    if 0 <= nx < n and 0 <= ny < m:
-        if p >= 1:
-            visited[nx][ny] = True
-            dfs(nx, ny, d, 1, start + w[nx][ny])
-            visited[nx][ny] = False
             
-    
+dfs(sx, sy, -1, 0, start)
 print(ans)
