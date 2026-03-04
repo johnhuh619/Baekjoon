@@ -1,37 +1,31 @@
 n, m = map(int, input().split())
-w = [list(map(int, input().split())) for _ in range(n)]    
-sx, sy, p = map(int, input().split())
+w = [list(map(int,input().split())) for _ in range(n)]
+sx, sy, pipes = map(int, input().split())
 
-dx = [0,0,1,-1]
-dy = [1,-1,0,0]
-
+ans = 0
+dx = [1,-1,0,0]
+dy = [0,0,1,-1]
 visited = [[False]*m for _ in range(n)]
-visited[sx][sy] = True
+def dfs(x, y, cnt, prev_dir, tot):
+    global ans    
 
-start = w[sx][sy]
-ans = start
-
-def dfs(x, y, prev_dir, cnt, cur_sum):
-    global ans
+    ans = max(ans, tot)
     
-    ans = max(ans, cur_sum)
-    
-    for i in range(4):
-        nx = x + dx[i]
-        ny = y + dy[i]
-        
+    for d in range(4):
+        nx = x + dx[d]
+        ny = y + dy[d]
         if 0 <= nx < n and 0 <= ny < m and not visited[nx][ny]:
-            point = 1
-            if prev_dir != -1 and i != prev_dir:
-                point += 1 # ㄱ 자 파이프로 교체
-            
-            # cost
-            if cnt + point > p:
+            cost = 1
+            if prev_dir != -1 and prev_dir != d:
+                cost += 1
+                
+            if cnt + cost > pipes:
                 continue
             
             visited[nx][ny] = True
-            dfs(nx, ny, i, cnt + point, cur_sum + w[nx][ny])
+            dfs(nx, ny, cnt + cost, d, tot + w[nx][ny])
             visited[nx][ny] = False
-            
-dfs(sx, sy, -1, 0, start)
+
+visited[sx][sy] = True
+dfs(sx, sy, 0, -1, w[sx][sy])
 print(ans)
