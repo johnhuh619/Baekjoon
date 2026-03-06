@@ -1,47 +1,39 @@
 import heapq
-import sys
-
 n, e = map(int, input().split())
-graph = [ [] for _ in range(n+1)]
-
+graph = [[] for _ in range(n+1)]
 for _ in range(e):
-  v1, v2, w = map(int, input().split())
-  graph[v1].append((v2, w))
-  graph[v2].append((v1, w))
-
+    a, b, w = map(int, input().split())
+    graph[a].append((b,w))
+    graph[b].append((a,w))
 v1, v2 = map(int, input().split())
 
-# 1 -> v1 -> v2 -> end
-# 1 -> v2 -> v1 -> end
+# 1 -> v1 -> v2 -> N
+# 1 -> v2 -> v2 -> N
 
-INF = sys.maxsize
 
-def djikstra(start):
-  pq = [(0, start)]
-  route = [INF] * (n+1)
-  route[start] = 0
+def djikstar(start):
+    cap = [1e9] * (n+1)
+    pq = [(0, start)]
+    cap[start] = 0
+    while pq:
+        cw, cn = heapq.heappop(pq)
+        
+        if cw > cap[cn]:
+            continue
+        
+        for nxt_node, nxt_w in graph[cn]:
+            cur_w = nxt_w + cw
+            if  cur_w < cap[nxt_node]:
+                cap[nxt_node] = cur_w
+                heapq.heappush(pq,(cur_w, nxt_node))
+    return cap
 
-  while pq:
-    tot_w, cur_v = heapq.heappop(pq)
-    if tot_w > route[cur_v]:
-      continue
 
-    for nv, nw in graph[cur_v]:
-      new_dist = tot_w + nw
-      if new_dist < route[nv]:
-        route[nv] = new_dist
-        heapq.heappush(pq, (new_dist, nv))
+cap1 = djikstar(1)
+cap_v1 = djikstar(v1)
+cap_v2 = djikstar(v2)
+case1 = cap1[v1] + cap_v1[v2] + cap_v2[n]
+case2 = cap1[v2] + cap_v2[v1] + cap_v1[n]
 
-  return route
-
-dist_from_1 = djikstra(1)
-dist_from_v1 = djikstra(v1)
-dist_from_v2 = djikstra(v2)
-
-r1 = dist_from_1[v1] + dist_from_v1[v2] + dist_from_v2[n]
-r2 = dist_from_1[v2] + dist_from_v2[v1] + dist_from_v1[n]
-
-if r1 >= INF and r2 >= INF:
-  print(-1)
-else:
-  print(min(r1, r2))
+ans = min(case1, case2)
+print(ans if ans < 1e9 else -1)
