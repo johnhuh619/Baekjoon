@@ -1,37 +1,37 @@
-import heapq
-from collections import deque
-
 n, m = map(int, input().split())
 
-graph = [[] for _ in range(n+1)]
+graph = []
 
 for i in range(m):
     u, v, w = map(int, input().split())
-    graph[u].append((w,v))
-    graph[v].append((w,u))
+    graph.append((w, u, v))
 
-visited = [False] * (n+1)
-pq = [(0,1)]
+graph.sort()
+
+parent = list(range(n+1))
+
+def find(x):
+    if parent[x] != x:
+        parent[x] = find(parent[x])
+    return parent[x]
+
+def union(a,b):
+    ra = find(a)
+    rb = find(b)
+    
+    if ra == rb:
+        return False
+    
+    parent[rb] = ra
+    return True
 
 tot = 0
 max_w = 0
-cnt = 0
 
-while pq:
-    cw, cn = heapq.heappop(pq)
-    
-    if visited[cn]:
-        continue
-    
-    visited[cn] = True
-    tot += cw
-    max_w = max(max_w, cw)
-    cnt += 1
-    
-    for nw, nn in graph[cn]:
-        if not visited[nn]:
-            heapq.heappush(pq, (nw, nn))
+for w, u, v in graph:
+    if union(u,v):
+        tot += w
+        max_w = w
         
-
 ans = tot - max_w
 print(ans)
