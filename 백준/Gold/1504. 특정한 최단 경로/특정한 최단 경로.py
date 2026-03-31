@@ -1,39 +1,36 @@
 import heapq
 n, e = map(int, input().split())
-graph = [[] for _ in range(n+1)]
+edges = [[] for _ in range(n+1)]
 for _ in range(e):
-    a, b, w = map(int, input().split())
-    graph[a].append((b,w))
-    graph[b].append((a,w))
+    a, b, cost = map(int, input().split())
+    edges[a].append((b, cost))
+    edges[b].append((a, cost))
 v1, v2 = map(int, input().split())
+INF = int(1e9)
 
-# 1 -> v1 -> v2 -> N
-# 1 -> v2 -> v2 -> N
-
-
-def djikstar(start):
-    cap = [1e9] * (n+1)
+def djikstra(start):
+    dist = [INF] * (n+1)
+    dist[start] = 0
     pq = [(0, start)]
-    cap[start] = 0
+    
     while pq:
-        cw, cn = heapq.heappop(pq)
+        cost, node = heapq.heappop(pq)
         
-        if cw > cap[cn]:
+        if cost > dist[node]:
             continue
         
-        for nxt_node, nxt_w in graph[cn]:
-            cur_w = nxt_w + cw
-            if  cur_w < cap[nxt_node]:
-                cap[nxt_node] = cur_w
-                heapq.heappush(pq,(cur_w, nxt_node))
-    return cap
+        for nxt, nc in edges[node]:
+            new_cost = nc + cost
+            if new_cost < dist[nxt]:
+                dist[nxt] = new_cost
+                heapq.heappush(pq, (new_cost, nxt))
+    return dist
+d_start = djikstra(1)
+d_v1 = djikstra(v1)
+d_v2 = djikstra(v2)
 
+p1 = d_start[v1] + d_v1[v2] + d_v2[n]
+p2 = d_start[v2] + d_v2[v1] + d_v1[n]
+ans = min(p1,p2)
 
-cap1 = djikstar(1)
-cap_v1 = djikstar(v1)
-cap_v2 = djikstar(v2)
-case1 = cap1[v1] + cap_v1[v2] + cap_v2[n]
-case2 = cap1[v2] + cap_v2[v1] + cap_v1[n]
-
-ans = min(case1, case2)
-print(ans if ans < 1e9 else -1)
+print(ans if ans < INF else -1)
