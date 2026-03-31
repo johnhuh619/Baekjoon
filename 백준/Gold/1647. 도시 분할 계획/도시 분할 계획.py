@@ -1,12 +1,10 @@
 n, m = map(int, input().split())
+edges = []
+for _ in range(m):
+    a, b, c = map(int, input().split())
+    edges.append((c, a, b))
 
-graph = []
-
-for i in range(m):
-    u, v, w = map(int, input().split())
-    graph.append((w, u, v))
-
-graph.sort()
+edges.sort()
 
 parent = list(range(n+1))
 
@@ -18,20 +16,24 @@ def find(x):
 def union(a,b):
     ra = find(a)
     rb = find(b)
-    
+
     if ra == rb:
         return False
     
-    parent[rb] = ra
+    if ra < rb:
+        parent[ra] = rb
+    else:
+        parent[rb] = ra
+    
     return True
 
-tot = 0
-max_w = 0
-
-for w, u, v in graph:
-    if union(u,v):
-        tot += w
-        max_w = w
-        
-ans = tot - max_w
-print(ans)
+ans = 0
+max_cost = 0
+for cost, a, b in edges:
+    if union(a, b):
+       ans += cost
+       max_cost = cost
+ans = ans - max_cost    
+print(ans) 
+    
+    
